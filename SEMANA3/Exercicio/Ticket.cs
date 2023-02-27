@@ -10,14 +10,21 @@ namespace Exercicio
         public DateTime Entrada { get; set; }
         public DateTime Saida { get; set; }
         public Boolean Ativo { get; set; }
+
+        public Ticket(DateTime entrada, DateTime saida, bool ativo ){
+            Entrada = entrada;
+            Saida = saida;
+            Ativo = ativo;
+        }
     
-        public void CalcularTempo(){
+        public double CalcularTempo(){
             var tempo = Saida - Entrada;
-            Console.WriteLine($"Tempo: {tempo}");
+            return tempo.TotalMinutes;
         }
 
-        public void CalcularValor(){
-        
+        public double CalcularValor(){
+          double valor = CalcularValor() * 0.9;
+          return valor;
         }
     }
 }

@@ -11,7 +11,19 @@ namespace Exercicio
         public string Modelo { get; set; }
         public string Cor { get; set; }
         public string Marca { get; set; }
+
+        public bool Ativo { get; set; }
         public List<Ticket> Tickets {get; set;}
+
+        
+
+        public Carro(string placa, string modelo, string cor, string marca)
+        {
+            Placa = placa;
+            Modelo = modelo;
+            Cor = cor;
+            Marca = marca;
+        }
     
     }
 }
