@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Exercicio
+namespace Estacionamento
 {
     public class Carro
     {
@@ -11,19 +11,11 @@ namespace Exercicio
         public string Modelo { get; set; }
         public string Cor { get; set; }
         public string Marca { get; set; }
-
-        public bool Ativo { get; set; }
         public List<Ticket> Tickets {get; set;}
 
-        
-
-        public Carro(string placa, string modelo, string cor, string marca)
+        public Carro()
         {
-            Placa = placa;
-            Modelo = modelo;
-            Cor = cor;
-            Marca = marca;
+            Tickets = new List<Ticket>();
         }
-    
     }
 }

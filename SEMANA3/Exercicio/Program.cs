@@ -1,8 +1,6 @@
-﻿using Exercicio;
-using System.Globalization;
+﻿using Estacionamento;
 
 List<Carro> carros = new List<Carro>();
-
 string opcao;
 do{
     Console.WriteLine("Bem Vindo, escolha uma opção");
@@ -12,21 +10,24 @@ do{
     Console.WriteLine("4 - Consultar histórico");
     Console.WriteLine("5 - Sair");
     opcao = Console.ReadLine();
+
     if(opcao == "1"){
         CadastrarCarro();
     }
     else if (opcao == "2"){
-        ObterCarro();
+        GerarTicket();
     }
     else if (opcao == "3"){
-        GerarTicket();
+        FecharTicket();
     }
     else if (opcao == "4"){
         ConsultarHistorico();
     }
+
 }while(opcao !="5");
 
-void CadastrarCarro(){
+void CadastrarCarro()
+{
     Carro carro = new Carro();
     Console.WriteLine("Qual a placa do carro?");
     carro.Placa = Console.ReadLine();
@@ -40,10 +41,8 @@ void CadastrarCarro(){
     
 }
 
-Carro ObterCarro (){ 
-    string placa;
-    Console.WriteLine("Qual placa?");
-    placa = Console.ReadLine();
+Carro ObterCarro (string placa)
+{     
     foreach(Carro carro in carros){
         if(placa == carro.Placa){
       return carro;
@@ -52,69 +51,70 @@ Carro ObterCarro (){
     return null;
 }
 
-void GerarTicket (){
+void GerarTicket ()
+{
     Console.WriteLine("Qual a placa?");
-    int placa = int.Parse(Console.ReadLine());
+    string placa = Console.ReadLine();
 
-    Carro ticket = ObterCarro();
+    var carro = ObterCarro(placa);
 
-    if (ticket == null){
-    Console.WriteLine("Não ha ticket");
+    if (carro == null){
+    Console.WriteLine("Não há esse carro");
     return;
     }
 
-    foreach(var veiculo in carros){
-        if (veiculo.Ativo == true){
+    foreach(var ticket in carro.Tickets){
+        if (ticket.Ativo == true){
         Console.WriteLine("veículo já possui ticket em aberto.");
         return;
         }
     }
+
+    Ticket ticketNovo = new Ticket();
+    carro.Tickets.Add(ticketNovo);
+    Console.WriteLine("Ticket Gerado");
 }
 
-void ConsultarHistorico(){
+void FecharTicket ()
+{
     Console.WriteLine("Qual a placa?");
-    int placa = int.Parse(Console.ReadLine());
+    string placa = Console.ReadLine();
 
-    Carro carroCliente = ObterCarro();
+    var carro = ObterCarro(placa);
 
-    if (carroCliente == null){
-    Console.WriteLine("Carro não cadastrado, favor cadastrar antes");
+    if (carro == null){
+    Console.WriteLine("Não há esse carro");
     return;
-  }
-  foreach(Ticket ticket  in carroCliente.Tickets){
-    Console.WriteLine(" Entrada: " + ticket.Entrada + " saida: " + ticket.Saida + "Valor:" + ticket.CalcularValor() );
-  }
+    }
+    Ticket ticketAberto = null;
+    foreach(var ticket in carro.Tickets){
+        if (ticket.Ativo == true){
+        ticketAberto = ticket;
+        }
+    }
+    if(ticketAberto == null){
+        Console.WriteLine("Não há ticket em aberto");
+        return;
+    }
+    ticketAberto.Saida = DateTime.Now;
+    Console.WriteLine($"O veiculo ficou {ticketAberto.CalcularTempo()} minutos e valor cobrado será R${ticketAberto.CalcularValor()}");
+}
 
-void FecharTicket(){
+void ConsultarHistorico()
+{
     Console.WriteLine("Qual a placa?");
-    string carro = Console.ReadLine();
-    Ticket ticketAtivo = null;
-    foreach(string ticket in carro.tickets){
-        if (ticket.Ativo == true){
-        ticketAtivo = ticket;
-        }
+    string placa = Console.ReadLine();
+
+    var carro = ObterCarro(placa);
+
+    if (carro == null){
+    Console.WriteLine("Não há esse carro");
+    return;
     }
 
-    if(ticketAtivo == null){
-        Console.WriteLine("veículo não possui ticket em aberto.");
-        return;
-    }
+    Console.WriteLine("   Entrada            |       Saida           |  Ativo |   Valor   ");
 
-    ticketAtivo.Saida = DateTime.Now;
-    ticketAtivo.Ativo = false;
-    Ticket ticketAtivo = null;
-    foreach(var ticket in carro.tickets){
-        if (ticket.Ativo == true){
-        ticketAtivo = ticket;
-        }
-    }
-
-    if(ticketAtivo == null){
-        Console.WriteLine("veículo não possui ticket em aberto.");
-        return;
-    }
-
-    ticketAtivo.Saida = DateTime.Now;
-    ticketAtivo.Ativo = false;
+    foreach(var ticket in carro.Tickets){
+        Console.WriteLine($"{ticket.Entrada}   | {ticket.Saida}   | {ticket.Ativo.ToString()}   | R${ticket.CalcularValor()}");
     }
 }
